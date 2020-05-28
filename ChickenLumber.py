@@ -322,7 +322,8 @@ def MoveToTree(spotnumber):
         if pathlock > 50:
             Misc.SendMessage("Pathlocked Trying Again")
             Misc.SendMessage("{} {} {}".format(Player.Position.X + offset[0], Player.Position.Y + offset[1], Player.Position.Z + offset[2]), 222)
-            Player.PathFindTo(Player.Position.X + offset[0], Player.Position.Y + offset[1], Player.Position.Z + offset[2])  
+            #Player.PathFindTo(1187,561,-88) 
+            go(Player.Position.X + offset[0], Player.Position.Y + offset[1] + 1)
             pathlock = 0
         
     Misc.SendMessage('--> Reached TreeSpot: %i' % (spotnumber), 2222)
