@@ -311,7 +311,7 @@ def MoveToTree(spotnumber):
     pathlock = 0
     Misc.SendMessage('--> Moving to TreeSpot: {}'.format(spotnumber), 222)
     offset = GetRangeOffset(spotnumber)
-    Player.PathFindTo(Player.Position.X + offset[0], Player.Position.Y + offset[1], Player.Position.Z + offset[2])
+    Player.PathFindTo(Player.Position.X + offset[0], Player.Position.Y + offset[1] + 1, Player.Position.Z + offset[2])
     Misc.Pause(1000)
     Misc.SendMessage("{} {} {}".format(offset[0], offset[1], offset[2]), 222)
     while not RangeTree(spotnumber):
