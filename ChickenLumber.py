@@ -73,33 +73,36 @@ def go(x1, y1):
 def checkPositionChanged(posX, posY, noise=False):
     dbg("checkPositionChanged")
     recallStatus = "Life Sucks"
+    unchanged = True
     if Player.Position.X == posX and Player.Position.Y == posY:
         dbg("checkPositionChanged: Position Unchanged")
         if Journal.Search("blocked"):
             Journal.Clear()
             if noise:
-                Misc.SendMessage("Rune Blocked", 2222)
+                Misc.SendMessage("Rune Blocked", 4095)
             recallStatus = "blocked"
 
         elif Journal.Search("mana"):
             Journal.Clear()
             if noise:
-                Misc.SendMessage("out of mana", 2222)
+                Misc.SendMessage("out of mana", 4095)
             recallStatus = "mana"
 
         elif Journal.Search("More reagents are needed"):
             Journal.Clear()
             if noise:
-                Misc.SendMessage("out of mana", 2222)
+                Misc.SendMessage("out of mana", 4095)
             recallStatus = "regs"
 
         elif Journal.Search("Thou art too encumbered"):
             Journal.Clear()
             if noise:
-                Misc.SendMessage("Overweight", 2222)
+                Misc.SendMessage("Overweight", 4095)
             recallStatus = "weight"
             BankWood()
 
+        elif unchanged:
+            recallStatus = "unchanged"
         else:
             recallStatus = "good"
     else:
@@ -374,6 +377,11 @@ def CutTree(spotnumber):
     global lastSpot
     global blockcount
     global lastrune
+    if (Player.Weight >= WeightLimit):
+        Misc.SendMessage("Overweight While Cutting")
+        CutLogsToBoards()
+        BankWood()
+    
     lastSpot = spotnumber
     if Target.HasTarget():
         Misc.SendMessage("--> Extraneous Target Cancelled", 2222)
@@ -446,14 +454,14 @@ def CheckEnemy():
 
 Misc.SendMessage("--> Starting Lumberjack", 2222)
 while onloop:
-    
-    RecallNextSpot()
-    ScanStatic()
     overWeight()
+    RecallNextSpot()
+    ScanStatic()    
     i = 0
     while i < treenumber:
         MoveToTree(i)
         CutTree(i)
+        overWeight()
         i = i + 1
     treeposx = []
     treeposy = []
