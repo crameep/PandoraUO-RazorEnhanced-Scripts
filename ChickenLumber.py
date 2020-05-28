@@ -1,17 +1,26 @@
-# Parametri
-LogBag = 0x408605E4 # Serial of log bag
+# SETUP
+LogBag = 0x413985E1 # Serial of log bag
 OtherResourceBag = 0x401F5898 # Serial of other resource bag
-SerialAccetta = 0x408605ED # Serial Axe
-ScanRange = 15
-RuneBookBanca = 0x404C8545 # Runebook for casa
-PosizioneRunaCasa = 14
-RuneBookAlberi = 0x402ABA35 # Runebook for tree spots
+SerialAxe = 0x4050B751 # Serial Axe
+ScanRange = 5
+RuneBookBank = 0x404C8545 # Runebook for Bank
+BankRunePosition = 14
+RuneBookTrees = 0x402ABA35 # Runebook for tree spots
+MasterRuneBook = True
+MRBSerial = 0x40F8B116
+MRBLogBook = 18 
+MRBBankBook = 1  
+MRBBankSpot = 1
+UseStorageBox = True  #### Set Log Bag to Resource Storage Box
+NoBank = True ## Use Bank Stone Instead of Banking
+BankStoneSerial = 0x402AAAF6
+
 ###########
 
-# Variabili Sistema
+# Variables
 WeightLimit = Player.MaxWeight - 80
 TreeStaticID = [3221, 3222, 3225, 3227, 3228, 3229, 3210, 3238, 3240, 3242, 3243, 3267, 3268, 3272, 3273, 3274, 3275, 3276, 3277, 3280, 3283, 3286, 3288, 3290, 3293, 3296, 3299, 3302, 3320, 3323, 3326, 3329, 3365, 3367, 3381, 3383, 3384, 3394, 3395, 3417, 3440, 3461, 3476, 3478, 3480, 3482, 3484, 3486, 3488, 3490, 3492, 3496]
-EquipAccettaDelay = 2000
+EquipaxeDelay = 2000
 TimeoutOnWaitAction = 4000
 ChopDelay = 1000
 RecallPause = 4000 
@@ -40,15 +49,18 @@ treenumber = 0
 blockcount = 0
 lastrune = 5
 onloop = True
-PosizioneRunaCasa=PosizioneRunaCasa * 6 - 1
+BankRunePosition=BankRunePosition * 6 - 1
 lastSpot = 0
+
+if MasterRuneBook:
+    lastrune = 1
     
 
 ##################
 dolog = 1
 def dbg(s):
     if dolog:
-        Misc.SendMessage(s, 4095)
+        Misc.SendMessage(s, 2222)
 
 def go(x1, y1):
     Coords = PathFinding.Route() 
@@ -56,8 +68,7 @@ def go(x1, y1):
     Coords.Y = y1
     Coords.MaxRetry = 3
     PathFinding.Go(Coords)
-
-
+    
 def checkPositionChanged(posX, posY, noise=False):
     dbg("checkPositionChanged")
     recallStatus = "Life Sucks"
@@ -66,25 +77,25 @@ def checkPositionChanged(posX, posY, noise=False):
         if Journal.Search("blocked"):
             Journal.Clear()
             if noise:
-                Misc.SendMessage("Rune Blocked", 4095)
+                Misc.SendMessage("Rune Blocked", 2222)
             recallStatus = "blocked"
 
         elif Journal.Search("mana"):
             Journal.Clear()
             if noise:
-                Misc.SendMessage("out of mana", 4095)
+                Misc.SendMessage("out of mana", 2222)
             recallStatus = "mana"
 
         elif Journal.Search("More reagents are needed"):
             Journal.Clear()
             if noise:
-                Misc.SendMessage("out of mana", 4095)
+                Misc.SendMessage("out of mana", 2222)
             recallStatus = "regs"
 
         elif Journal.Search("Thou art too encumbered"):
             Journal.Clear()
             if noise:
-                Misc.SendMessage("Overweight", 4095)
+                Misc.SendMessage("Overweight", 2222)
             recallStatus = "weight"
 
         else:
@@ -95,9 +106,39 @@ def checkPositionChanged(posX, posY, noise=False):
     Journal.Clear()
     dbg("checkPositionChanged: return: " + recallStatus)
     return recallStatus
+ 
+ ### Corys Adds
+ ##### Master Rune Book Code  
+def MasterBook(serial, book, rune, spell="R"):
+    nbook = book + 1
+    baseRune = 0
+    if spell == 'R':  # recall
+        baseRune = 5
+    elif spell == 'G':   # gate
+        baseRune = 6
+    elif spell == 'S':   # sacred journey
+        baseRune = 7
+    else:
+        Misc.SendMessage("Spell should be one of R, G or S, quitting", 2222)
+        return
+
+    newrune = (rune - 1) * 6 + baseRune
+    Mbook = Items.FindBySerial(serial)
+    if Mbook != None:
+        Items.UseItem(Mbook)
+        Misc.Pause(200)
+        Gumps.WaitForGump(354527139, 10000)
+        Gumps.SendAction(354527139, nbook)
+        Gumps.WaitForGump(128397316, 10000)
+        Gumps.SendAction(128397316, newrune)
+    else:
+        Misc.SendMessage("Can't find the book")
+##### End Corys Add
         
 
 def recall(bookSerial, bookIndex):
+    if MasterRuneBook:
+        MasterBook(MRBSerial, MRBLogBook, bookIndex, "R")
     Items.UseItem(bookSerial)
     Gumps.WaitForGump(1431013363, 2000)
     Gumps.SendAction(1431013363, bookIndex)
@@ -126,11 +167,11 @@ def gotoBank():
     dbg("gotoBank")
     x = Player.Position.X
     y = Player.Position.Y
-    rv = doRecall(RuneBookBanca, PosizioneRunaCasa)
+    rv = doRecall(RuneBookBanca, BankRunePosition)
     dbg("gotoBank, recall = " + str(rv))
     if rv == "good":
         dbg("gotoBank, we're good")
-        Player.ChatSay(4095, "bank")
+        Player.ChatSay(2222, "bank")
     else:
         dbg("gotoBank, recall failed: " + str(rv))
         Misc.Pause(2000)
@@ -139,14 +180,14 @@ def RecallNextSpot():
     global lastrune
     dbg("RecallNextSpot")
     Gumps.ResetGump()
-    Misc.SendMessage("--> Recall to Spot", 4095) 
-    doRecall(RuneBookAlberi, lastrune)
+    Misc.SendMessage("--> Recall to Spot", 2222) 
+    doRecall(RuneBookTrees, lastrune)
     Misc.Pause(RecallPause)
     lastrune = lastrune + 6
     if lastrune > 95:
         lastrune = 5 
     if lastrune < 6:
-            Misc.SendMessage("--> Initialize New Cycle", 4095) 
+            Misc.SendMessage("--> Initialize New Cycle", 2222) 
             lastrune = 5       
     EquipAxe()
     
@@ -181,7 +222,7 @@ def CutLogsToBoards():
     for item in Player.Backpack.Contains:
         if item.ItemID == LogID:
             dbg("CutLogsToBoards: Log found")
-            Items.UseItem(SerialAccetta)
+            Items.UseItem(SerialAxe)
             Target.WaitForTarget(2000, False)
             Target.TargetExecute(item)
             Misc.Pause(2000)
@@ -192,14 +233,14 @@ def CutLogsToBoards():
 def EquipAxe():
     dbg("EquipAxe")
     if not Player.CheckLayer("RightHand"):
-        Player.EquipItem(SerialAccetta)
-        Misc.Pause(EquipAccettaDelay)      
+        Player.EquipItem(SerialAxe)
+        Misc.Pause(EquipaxeDelay)      
    
 ####################  
 
 def ScanStatic(): 
     global treenumber
-    Misc.SendMessage("--> Init Tile Scan", 4095)
+    Misc.SendMessage("--> Init Tile Scan", 2222)
     minx = Player.Position.X - ScanRange
     maxx = Player.Position.X + ScanRange
     miny = Player.Position.Y - ScanRange
@@ -223,11 +264,12 @@ def ScanStatic():
         minx = Player.Position.X - ScanRange            
         miny = miny + 1
     treenumber = treeposx.Count    
-    Misc.SendMessage('--> Total Trees: %i' % (treenumber), 4095)
+    Misc.SendMessage('--> Total Trees: %i' % (treenumber), 2222)
 
 ####################
        
 def RangeTree(spotnumber):
+    
     if (Player.Position.X - 1) == treeposx[spotnumber] and (Player.Position.Y + 1) == treeposy[spotnumber]:
         return True
     elif (Player.Position.X - 1) == treeposx[spotnumber] and (Player.Position.Y - 1) == treeposy[spotnumber]:
@@ -245,7 +287,19 @@ def RangeTree(spotnumber):
     elif Player.Position.Y == treeposy[spotnumber] and (Player.Position.X + 1) == treeposx[spotnumber]:   
         return True    
     else:
+       # Misc.SendMessage("TreePos: {},{} PlayerPos: {},{}".format(treeposx[spotnumber],treeposy[spotnumber],Player.Position.X, Player.Position.Y))
         return False
+        
+def GetRangeOffset(spotnumber):
+    PX = Player.Position.X
+    PY = Player.Position.Y
+    PZ = Player.Position.Z
+    
+    OX = treeposx[spotnumber] - PX
+    OY = treeposy[spotnumber] - PY
+    OZ = treeposz[spotnumber] - PZ
+    
+    return (OX,OY,OZ)
        
 ####################
     
@@ -255,17 +309,23 @@ def MoveToTree(spotnumber):
         dbg("MoveToTree: spotnumber bad")
         return
     pathlock = 0
-    Misc.SendMessage('--> Moving to TreeSpot: %i' % (spotnumber), 4095)
-    Player.PathFindTo(treeposx[spotnumber], treeposy[spotnumber], treeposz[spotnumber])
+    Misc.SendMessage('--> Moving to TreeSpot: {}'.format(spotnumber), 222)
+    offset = GetRangeOffset(spotnumber)
+    Player.PathFindTo(Player.Position.X + offset[0], Player.Position.Y + offset[1], Player.Position.Z + offset[2])
+    Misc.Pause(1000)
+    Misc.SendMessage("{} {} {}".format(offset[0], offset[1], offset[2]), 222)
     while not RangeTree(spotnumber):
+        #Misc.SendMessage("Ranging Tree")
         CheckEnemy()  
         Misc.Pause(30)
         pathlock = pathlock + 1
-        if pathlock > 350:
-            Player.PathFindTo(treeposx[spotnumber], treeposy[spotnumber], treeposz[spotnumber])  
+        if pathlock > 50:
+            Misc.SendMessage("Pathlocked Trying Again")
+            Misc.SendMessage("{} {} {}".format(Player.Position.X + offset[0], Player.Position.Y + offset[1], Player.Position.Z + offset[2]), 222)
+            Player.PathFindTo(Player.Position.X + offset[0], Player.Position.Y + offset[1], Player.Position.Z + offset[2])  
             pathlock = 0
         
-    Misc.SendMessage('--> Reached TreeSpot: %i' % (spotnumber), 4095)
+    Misc.SendMessage('--> Reached TreeSpot: %i' % (spotnumber), 2222)
 
 ####################  
 def overWeight():
@@ -290,25 +350,25 @@ def CutTree(spotnumber):
     global lastrune
     lastSpot = spotnumber
     if Target.HasTarget():
-        Misc.SendMessage("--> Extraneous Target Cancelled", 4095)
+        Misc.SendMessage("--> Extraneous Target Cancelled", 2222)
         Target.Cancel()
         Misc.Pause(500)
     
     CheckEnemy()    
     Journal.Clear()
-    accetta = Items.FindBySerial(SerialAccetta)
-    Items.UseItem(accetta)
+    axe = Items.FindBySerial(SerialAxe)
+    Items.UseItem(axe)
     Target.WaitForTarget(TimeoutOnWaitAction)
     Target.TargetExecute(treeposx[spotnumber], treeposy[spotnumber], treeposz[spotnumber], treegfx[spotnumber])
     Misc.Pause(ChopDelay)
     if Journal.Search("There's not enough"):
-        Misc.SendMessage("--> Go to next tree", 4095)
+        Misc.SendMessage("--> Go to next tree", 2222)
     elif Journal.Search("That is too far away"):
         blockcount = blockcount + 1
         Journal.Clear()
         if (blockcount > 15):
             blockcount = 0
-            Misc.SendMessage("--> Blocked", 4095)
+            Misc.SendMessage("--> Blocked", 2222)
         else:
             CutTree(spotnumber)
     else:
@@ -318,7 +378,7 @@ def CutTree(spotnumber):
         
 def CheckEnemy():
     if (Player.Hits < Player.HitsMax):
-        Misc.SendMessage("--> WARNING: Enemy Around!",4095)
+        Misc.SendMessage("--> WARNING: Enemy Around!",2222)
         Misc.Beep()
         
         fil = Mobiles.Filter()
@@ -333,7 +393,7 @@ def CheckEnemy():
                 
         if enemyfound != 0:
             enemymobile = Mobiles.FindBySerial(enemyfound)
-            Misc.SendMessage("--> WARNING: Enemy Detected!", 4095) 
+            Misc.SendMessage("--> WARNING: Enemy Detected!", 2222) 
             Spells.CastMagery("Poison")
             Target.WaitForTarget(1000)
             Target.TargetExecute(enemymobile)
@@ -358,7 +418,7 @@ def CheckEnemy():
         
 ####################
 
-Misc.SendMessage("--> Starting Lumberjack", 4095)
+Misc.SendMessage("--> Starting Lumberjack", 2222)
 while onloop:
     overWeight()
     RecallNextSpot()
