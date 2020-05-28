@@ -27,7 +27,7 @@ RecallPause = 4000
 DragDelay = 1200
 LogID = 0x1BDD
 BoardsID = 0x1BD7
-OtherResourceID = [12687, 12697, 12127, 12688, 12689]
+BankResourceID = [ 0x1BD7,12687, 12697, 12127, 12688, 12689]
 
 """   ^^^
 Bark Fragment   12687
@@ -198,30 +198,38 @@ def RecallNextSpot():
                 lastrune = 5       
     EquipAxe()
     
-####################    
+#################### 
+
+
+def find(containerSerial, typeArray):
+    ret_list = []
+    container = Items.FindBySerial(containerSerial)
+    if container != None:
+        for item in container.Contains:
+            if item.ItemID in typeArray:
+                ret_list.append(item)
+    return ret_list   
 
 def BankWood():
+    attempt = 0
     dbg("BankWood")
     if NoBank:
         Items.UseItem(BankStoneSerial)
+        Misc.Pause(1000)
     else:
         gotoBank()
     Journal.Clear()
-    for item in Player.Backpack.Contains:
-        dbg("BankWood: Backpack Loop")
-        Misc.Pause(1500)
-        if item.ItemID == LogID:
-            dbg("BankWood: Logs")
-            CutLogsToBoards()
-            Misc.Pause(2000)
-        elif item.ItemID == BoardsID:
-            dbg("BankWood: Boards")
-            Items.Move(item, LogBag, 0)
-            Misc.Pause(DragDelay)
-        elif item.ItemID in OtherResourceID:
-            dbg("BankWood: other resources")
-            Items.Move(item, LogBag, 0)
-            Misc.Pause(DragDelay)
+    CutLogsToBoards()
+    
+    
+    lst = find(Player.Backpack.Serial, BankResourceID)
+    for itm in lst:
+        Misc.SendMessage(itm.Serial)
+        Items.Move(itm, 0x413985E1, 0)
+        Misc.SendMessage(itm.Name)
+        Misc.Pause(2000)
+    
+    
 
 
 ####################
@@ -229,14 +237,14 @@ def BankWood():
 def CutLogsToBoards():
     dbg("CutLogsToBoards")
     EquipAxe()
-    for item in Player.Backpack.Contains:
-        if item.ItemID == LogID:
-            dbg("CutLogsToBoards: Log found")
-            Items.UseItem(SerialAxe)
-            Target.WaitForTarget(2000, False)
-            Target.TargetExecute(item)
-            Misc.Pause(2000)
-    Misc.Pause(2000)
+    while Items.FindByID(LogID, -1, Player.Backpack.Serial) != None:
+        log = Items.FindByID(LogID, -1, Player.Backpack.Serial)
+        dbg("CutLogsToBoards: Log found")
+        Items.UseItem(SerialAxe)
+        Target.WaitForTarget(2000, False)
+        Target.TargetExecute(log)
+        Misc.Pause(2000)
+
             
 #################### 
 
