@@ -183,19 +183,28 @@ def RecallNextSpot():
     Misc.SendMessage("--> Recall to Spot", 2222) 
     doRecall(RuneBookTrees, lastrune)
     Misc.Pause(RecallPause)
-    lastrune = lastrune + 6
-    if lastrune > 95:
-        lastrune = 5 
-    if lastrune < 6:
-            Misc.SendMessage("--> Initialize New Cycle", 2222) 
-            lastrune = 5       
+    if MasterRuneBook:
+        lastrune = lastrune + 1
+        if lastrune >= 16:
+           Misc.SendMessage("--> Initialize New Cycle", 2222)      
+           lastrune = 1
+    else:
+        lastrune = lastrune + 6
+        if lastrune > 95:
+            lastrune = 5 
+        if lastrune < 6:
+                Misc.SendMessage("--> Initialize New Cycle", 2222) 
+                lastrune = 5       
     EquipAxe()
     
 ####################    
 
 def BankWood():
     dbg("BankWood")
-    gotoBank()
+    if NoBank:
+        Items.UseItem(BankStoneSerial)
+    else:
+        gotoBank()
     Journal.Clear()
     for item in Player.Backpack.Contains:
         dbg("BankWood: Backpack Loop")
@@ -291,15 +300,17 @@ def RangeTree(spotnumber):
         return False
         
 def GetRangeOffset(spotnumber):
-    PX = Player.Position.X
-    PY = Player.Position.Y
-    PZ = Player.Position.Z
-    
-    OX = treeposx[spotnumber] - PX
-    OY = treeposy[spotnumber] - PY
-    OZ = treeposz[spotnumber] - PZ
-    
-    return (OX,OY,OZ)
+
+    if treeposx[spotnumber] != None:
+        PX = Player.Position.X
+        PY = Player.Position.Y
+        PZ = Player.Position.Z
+        
+        OX = treeposx[spotnumber] - PX
+        OY = treeposy[spotnumber] - PY
+        OZ = treeposz[spotnumber] - PZ
+        
+        return (OX,OY,OZ)
        
 ####################
     
@@ -319,7 +330,7 @@ def MoveToTree(spotnumber):
         CheckEnemy()  
         Misc.Pause(30)
         pathlock = pathlock + 1
-        if pathlock > 50:
+        if pathlock > 350:
             Misc.SendMessage("Pathlocked Trying Again")
             Misc.SendMessage("{} {} {}".format(Player.Position.X + offset[0], Player.Position.Y + offset[1], Player.Position.Z + offset[2]), 222)
             #Player.PathFindTo(1187,561,-88) 
@@ -338,9 +349,12 @@ def overWeight():
         if (Player.Weight >= WeightLimit):
             BankWood()
             Misc.Pause(1500)
-            lastrune = lastrune - 6
-            if lastrune < 5:
-                lastrune = 5
+            if MasterRuneBook:
+                lastrune = 0 
+            else:
+                lastrune = lastrune - 6
+                if lastrune < 5:
+                    lastrune = 5
             RecallNextSpot()
             MoveToTree(lastSpot)
 
