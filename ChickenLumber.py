@@ -435,9 +435,10 @@ def CheckEnemy():
 
 Misc.SendMessage("--> Starting Lumberjack", 2222)
 while onloop:
-    overWeight()
+    
     RecallNextSpot()
     ScanStatic()
+    overWeight()
     i = 0
     while i < treenumber:
         MoveToTree(i)
