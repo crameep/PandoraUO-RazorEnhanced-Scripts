@@ -1,19 +1,18 @@
 # SETUP
-LogBag = 0x413985E1 # Serial of log bag
+LogBag = 0x408605E4 # Serial of log bag CP
 OtherResourceBag = 0x401F5898 # Serial of other resource bag
-SerialAxe = 0x4050B751 # Serial Axe
+SerialAxe = 0x408605ED  # Serial Axe
 ScanRange = 15
 RuneBookBank = 0x404C8545 # Runebook for Bank
 BankRunePosition = 14
 RuneBookTrees = 0x402ABA35 # Runebook for tree spots
-MasterRuneBook = True
+MasterRuneBook = False
 MRBSerial = 0x40F8B116
 MRBLogBook = 18 
 MRBBankBook = 1  
 MRBBankSpot = 1
-MBRRuneSlots = 3
 UseStorageBox = True  #### Set Log Bag to Resource Storage Box
-NoBank = True ## Use Bank Stone Instead of Banking
+NoBank = False ## Use Bank Stone Instead of Banking
 BankStoneSerial = 0x402AAAF6
 
 ###########
@@ -28,7 +27,7 @@ RecallPause = 4000
 DragDelay = 1200
 LogID = 0x1BDD
 BoardsID = 0x1BD7
-BankResourceID = [ 0x1BD7,12687, 12697, 12127, 12688, 12689]
+OtherResourceID = [12687, 12697, 12127, 12688, 12689]
 
 """   ^^^
 Bark Fragment   12687
@@ -98,7 +97,6 @@ def checkPositionChanged(posX, posY, noise=False):
             if noise:
                 Misc.SendMessage("Overweight", 2222)
             recallStatus = "weight"
-            BankWood()
 
         else:
             recallStatus = "good"
@@ -162,18 +160,20 @@ def doRecall(bookSerial, bookIndex):
             break
         else:
             retry += 1
-
+            Misc.Pause(RecallPause)
+    return rv
 
 # recall via runebook to the insula bank
 def gotoBank():
+    global BankRunePosition
     dbg("gotoBank")
     x = Player.Position.X
     y = Player.Position.Y
-    rv = doRecall(RuneBookBanca, BankRunePosition)
+    rv = doRecall(RuneBookBank, BankRunePosition)
     dbg("gotoBank, recall = " + str(rv))
     if rv == "good":
         dbg("gotoBank, we're good")
-        Player.ChatSay(2222, "bank")
+        Player.ChatSay(4095, "bank")
     else:
         dbg("gotoBank, recall failed: " + str(rv))
         Misc.Pause(2000)
@@ -185,52 +185,35 @@ def RecallNextSpot():
     Misc.SendMessage("--> Recall to Spot", 2222) 
     doRecall(RuneBookTrees, lastrune)
     Misc.Pause(RecallPause)
-    if MasterRuneBook:
-        lastrune = lastrune + 1
-        if lastrune >= MBRRuneSlots:
-           Misc.SendMessage("--> Initialize New Cycle", 2222)      
-           lastrune = 1
-    else:
-        lastrune = lastrune + 6
-        if lastrune > 95:
-            lastrune = 5 
-        if lastrune < 6:
-                Misc.SendMessage("--> Initialize New Cycle", 2222) 
-                lastrune = 5       
+    lastrune = lastrune + 6
+    if lastrune > 95:
+        lastrune = 5 
+    if lastrune < 6:
+            Misc.SendMessage("--> Initialize New Cycle", 2222) 
+            lastrune = 5       
     EquipAxe()
     
-#################### 
-
-
-def find(containerSerial, typeArray):
-    ret_list = []
-    container = Items.FindBySerial(containerSerial)
-    if container != None:
-        for item in container.Contains:
-            if item.ItemID in typeArray:
-                ret_list.append(item)
-    return ret_list   
+####################    
 
 def BankWood():
-    attempt = 0
     dbg("BankWood")
-    if NoBank:
-        Items.UseItem(BankStoneSerial)
-        Misc.Pause(1000)
-    else:
-        gotoBank()
+    gotoBank()
     Journal.Clear()
-    CutLogsToBoards()
-    
-    
-    lst = find(Player.Backpack.Serial, BankResourceID)
-    for itm in lst:
-        Misc.SendMessage(itm.Serial)
-        Items.Move(itm, 0x413985E1, 0)
-        Misc.SendMessage(itm.Name)
-        Misc.Pause(2000)
-    
-    
+    for item in Player.Backpack.Contains:
+        dbg("BankWood: Backpack Loop")
+        Misc.Pause(1500)
+        if item.ItemID == LogID:
+            dbg("BankWood: Logs")
+            CutLogsToBoards()
+            Misc.Pause(2000)
+        elif item.ItemID == BoardsID:
+            dbg("BankWood: Boards")
+            Items.Move(item, LogBag, 0)
+            Misc.Pause(DragDelay)
+        elif item.ItemID in OtherResourceID:
+            dbg("BankWood: other resources")
+            Items.Move(item, LogBag, 0)
+            Misc.Pause(DragDelay)
 
 
 ####################
@@ -238,14 +221,14 @@ def BankWood():
 def CutLogsToBoards():
     dbg("CutLogsToBoards")
     EquipAxe()
-    while Items.FindByID(LogID, -1, Player.Backpack.Serial) != None:
-        log = Items.FindByID(LogID, -1, Player.Backpack.Serial)
-        dbg("CutLogsToBoards: Log found")
-        Items.UseItem(SerialAxe)
-        Target.WaitForTarget(2000, False)
-        Target.TargetExecute(log)
-        Misc.Pause(2000)
-
+    for item in Player.Backpack.Contains:
+        if item.ItemID == LogID:
+            dbg("CutLogsToBoards: Log found")
+            Items.UseItem(SerialAxe)
+            Target.WaitForTarget(2000, False)
+            Target.TargetExecute(item)
+            Misc.Pause(2000)
+    Misc.Pause(2000)
             
 #################### 
 
@@ -259,6 +242,7 @@ def EquipAxe():
 
 def ScanStatic(): 
     global treenumber
+    treenumber = 0
     Misc.SendMessage("--> Init Tile Scan", 2222)
     minx = Player.Position.X - ScanRange
     maxx = Player.Position.X + ScanRange
@@ -310,17 +294,15 @@ def RangeTree(spotnumber):
         return False
         
 def GetRangeOffset(spotnumber):
-
-    if treeposx[spotnumber] != None:
-        PX = Player.Position.X
-        PY = Player.Position.Y
-        PZ = Player.Position.Z
-        
-        OX = treeposx[spotnumber] - PX
-        OY = treeposy[spotnumber] - PY
-        OZ = treeposz[spotnumber] - PZ
-        
-        return (OX,OY,OZ)
+    PX = Player.Position.X
+    PY = Player.Position.Y
+    PZ = Player.Position.Z
+    
+    OX = treeposx[spotnumber] - PX
+    OY = treeposy[spotnumber] - PY
+    OZ = treeposz[spotnumber] - PZ
+    
+    return (OX,OY,OZ)
        
 ####################
     
@@ -340,7 +322,7 @@ def MoveToTree(spotnumber):
         CheckEnemy()  
         Misc.Pause(30)
         pathlock = pathlock + 1
-        if pathlock > 350:
+        if pathlock > 50:
             Misc.SendMessage("Pathlocked Trying Again")
             Misc.SendMessage("{} {} {}".format(Player.Position.X + offset[0], Player.Position.Y + offset[1], Player.Position.Z + offset[2]), 222)
             #Player.PathFindTo(1187,561,-88) 
@@ -351,23 +333,21 @@ def MoveToTree(spotnumber):
 
 ####################  
 def overWeight():
-    Misc.SendMessage("Overweight Check")
     global lastrune
     global lastSpot
+    global treenumber
     if (Player.Weight >= WeightLimit):
         CutLogsToBoards()
         Misc.Pause(1500)
         if (Player.Weight >= WeightLimit):
             BankWood()
             Misc.Pause(1500)
-            if MasterRuneBook:
-                lastrune = 0 
-            else:
+            if treenumber > 0:
                 lastrune = lastrune - 6
                 if lastrune < 5:
                     lastrune = 5
-            RecallNextSpot()
-            MoveToTree(lastSpot)
+                RecallNextSpot()
+                MoveToTree(lastSpot)
 
 def CutTree(spotnumber):
     dbg("CutTree")
@@ -444,12 +424,11 @@ def CheckEnemy():
         
 ####################
 
-Misc.SendMessage("--> Starting Lumberjack", 2222)
+Misc.SendMessage("--> Starting Lumberjack", 4095)
 while onloop:
-    
+    overWeight()
     RecallNextSpot()
     ScanStatic()
-    overWeight()
     i = 0
     while i < treenumber:
         MoveToTree(i)
@@ -460,3 +439,4 @@ while onloop:
     treeposz = []
     treegfx = []
     treenumber = 0
+serialAxe = 0x408605ED # Serial Axe CP
