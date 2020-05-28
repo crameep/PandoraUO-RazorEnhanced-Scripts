@@ -2,7 +2,7 @@
 LogBag = 0x413985E1 # Serial of log bag
 OtherResourceBag = 0x401F5898 # Serial of other resource bag
 SerialAxe = 0x4050B751 # Serial Axe
-ScanRange = 5
+ScanRange = 7
 RuneBookBank = 0x404C8545 # Runebook for Bank
 BankRunePosition = 14
 RuneBookTrees = 0x402ABA35 # Runebook for tree spots
@@ -97,6 +97,7 @@ def checkPositionChanged(posX, posY, noise=False):
             if noise:
                 Misc.SendMessage("Overweight", 2222)
             recallStatus = "weight"
+            BankWood()
 
         else:
             recallStatus = "good"
@@ -341,6 +342,7 @@ def MoveToTree(spotnumber):
 
 ####################  
 def overWeight():
+    Misc.SendMessage("Overweight Check")
     global lastrune
     global lastSpot
     if (Player.Weight >= WeightLimit):
