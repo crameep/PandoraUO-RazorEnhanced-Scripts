@@ -1,0 +1,374 @@
+Chivalry's Demise [Pandora Void]
+Insured
+two-handed weapon
+repond slayer
+reptile slayer
+artifact rarity 15
+weapon damage 20 - 24
+weapon speed 5s
+strength requirement 85
+durability 33 / 254
+Bane
+hit fireball 50%
+hit life leech 50%
+hit stamina leech 50%
+hit mana leech 50%
+hit physical area 50%
+hit cold area 88%
+hit energy area 50%
+hit poison area 50%
+spell channeling
+strength bonus 10
+stamina increase 20
+damage increase 73%
+poison damage 50%
+chaos damage 50%
+Scourged Life
+
+Melee Weapon
+
+Eodon Sandals [Pandora Artifact]
+Insured
+artifact rarity 14
+strength requirement 10
+night sight
+luck 100
+lower reagent cost 20%
+strength bonus 20
+hit point regeneration 2
+critical hit chance 5%
+perception 10%
+evasion 10%
+accuracy 5%
+combat threat -10%
+healing increase 15%
+faster ethereal casting 10%
+tier XP increase 15%
+Time of Legends
+
+Clothing
+
+Animated Legs of the Insane Tinker
+Insured
+strength requirement 45
+durability 219 / 255
+lower requirements 50%
+dexterity bonus 5
+stamina regeneration 2
+swing speed increase 10%
+damage increase 10%
+physical resist 5% +12%
+fire resist 3% +5%
+cold resist 2% +12%
+poison resist 3% +12%
+energy resist 2% 0%
+
+Armor
+
+shirt
+Insured
+strength requirement 10
+
+Clothing
+
+Spirit of the Totem [Pandorian War]
+Insured
+artifact rarity 15
+strength requirement 20
+durability 255 / 255
+self repair 10
+luck 127
+lower mana cost 8%
+reflect physical damage 15%
+strength bonus 20
+hit point increase 20
+stamina increase 20
+mana increase 20
+hit point regeneration 5
+stamina regeneration 5
+mana regeneration 5
+defense chance increase 30%
+hit chance increase 15%
+critical hit chance 5%
+resilience 15%
+combat threat -10%
+physical resist 20% 0%
+fire resist 3% +15%
+cold resist 8% 0%
+poison resist 4% 0%
+energy resist 20% 0%
+Legacy Drop
+
+Armor
+
+The Hold of Elements [Infested Major ToT]
+Insured
+artifact rarity 15
+strength requirement 10
+durability 208 / 255
+mage armor
+luck 188
+reflect physical damage 15%
+dexterity bonus 13
+intelligence bonus 14
+hit point increase 19
+stamina increase 20
+mana increase 20
+hit point regeneration 5
+stamina regeneration 5
+mana regeneration 5
+spell damage increase 53%
+damage increase 23%
+critical hit chance 5%
+physical resist 15% 0%
+fire resist 15% 0%
+cold resist 15% 0%
+poison resist 15% 0%
+energy resist 15% 0%
+Fire Resonance 18%
+
+Armor
+
+Eternal Toxic [Infested Major ToT]
+Insured
+luck 100
+strength bonus 15
+dexterity bonus 15
+intelligence bonus 15
+hit point regeneration 9
+mana regeneration 8
+spell damage increase 15%
+faster casting 1
+faster cast recovery 3
+defense chance increase 15%
+damage increase 25%
+critical hit chance 5%
+tier XP increase 15%
+Soul Charger Poison 13%
+Soul Charge 2%
+Legacy Drop
+
+Jewellery
+
+Necklace of Tranqulity [Infested Paragon]
+Insured
+lower mana cost 8%
+strength bonus 15
+dexterity bonus 15
+intelligence bonus 15
+hit point increase 25
+spell damage increase 15%
+faster casting 1
+faster cast recovery 3
+swing speed increase 25%
+defense chance increase 15%
+damage increase 25%
+Kinetic Resonance 18%
+Calmful Mind 4%
+
+Jewellery
+
+
+Crimson Cinture [Pandora Peerless]
+Insured
+strength requirement 10
+lower reagent cost 20%
+dexterity bonus 12
+hit point increase 15
+hit point regeneration 5
+
+Clothing
+
+Red Scales Basilisk Hide Breastplate
+Insured
+strength requirement 75
+durability 200 / 255
+lower mana cost 5%
+dexterity bonus 5
+hit point regeneration 2
+stamina regeneration 2
+mana regeneration 1
+defense chance increase 5%
+physical resist 3% +9%
+fire resist 3% +11%
+cold resist 3% +3%
+poison resist 3% +8%
+energy resist 3% +2%
+Damage Eater 10%
+
+Armor
+
+Bracelet of Protection
+Insured
+durability 255 / 255
+luck 100
+enhance potions 25%
+strength bonus 15
+dexterity bonus 15
+intelligence bonus 15
+hit point increase 5
+hit point regeneration 10
+spell damage increase 15%
+faster casting 1
+faster cast recovery 3
+swing speed increase 30%
+defense chance increase 15%
+damage increase 25%
+hit chance increase 15%
+critical hit chance 5%
+combat threat -10%
+tier XP increase 15%
+Damage Eater 15%
+
+Jewellery
+
+Lieutenant of the Britannian Royal Guard [Replica]
+Insured
+strength requirement 10
+durability 150 / 150
+lower reagent cost 20%
+intelligence bonus 5
+mana regeneration 2
+
+Clothing
+
+Earrings of the Primordial [Pandora Void]
+Insured
+artifact rarity 15
+luck 106
+lower mana cost 8%
+reflect physical damage 57%
+strength bonus 15
+dexterity bonus 15
+intelligence bonus 15
+spell damage increase 15%
+faster casting 1
+faster cast recovery 3
+defense chance increase 15%
+damage increase 25%
+critical hit chance 5%
+tier XP increase 15%
+Kinetic Eater 26%
+Tatedo
+
+Jewellery
+
+Arms of Tactical Excellence
+Insured
+strength requirement 25
+durability 201 / 255
+reflect physical damage 15%
+dexterity bonus 5
+hit point increase 20
+stamina increase 20
+mana increase 20
+hit point regeneration 5
+stamina regeneration 5
+mana regeneration 5
+resilience 15%
+physical resist 2% 0%
+fire resist 9% 0%
+cold resist 13% 0%
+poison resist 8% 0%
+energy resist 3% 0%
+Tactics +12
+
+Armor
+
+Water Quiver of the Sea Horse
+Lower Ammo Cost 50%
+luck 100
+hit point increase 20
+stamina increase 20
+mana increase 20
+hit point regeneration 15
+mana regeneration 15
+defense chance increase 5%
+hit chance increase 15%
+evasion 10%
+healing increase 15%
+tier XP increase 15%
+
+Quiver
+
+a vintage shroud
+strength requirement 10
+luck 250
+reflect physical damage 35%
+strength bonus 6
+dexterity bonus 6
+intelligence bonus 6
+swing speed increase 15%
+critical hit chance 5%
+evasion 10%
+accuracy 5%
+healing increase 15%
+faster ethereal casting 10%
+tier XP increase 15%
+
+Clothing
+
+kilt
+Insured
+strength requirement 10
+
+Clothing
+
+Slither
+Insured
+Fully Charged
+luck 100
+strength bonus 15
+dexterity bonus 15
+intelligence bonus 15
+hit point increase 20
+hit point regeneration 2
+spell damage increase 15%
+defense chance increase 10%
+damage increase 25%
+hit chance increase 15%
+critical hit chance 5%
+tier XP increase 15%
+
+
+TOTAL STATS
+
+Calmful Mind: 4
+Damage Eater: 25
+DamageIncrease: 231
+Fire Resonance: 18
+Kinetic Eater: 26
+Kinetic Resonance: 18
+SDI: 128
+Soul Charge: 15
+Soul Charger Poison: 13
+accuracy: 10
+cold resist: 605
+combat threat: 30
+critical hit chance: 40
+defense chance: 110
+dexterity bonus: 121
+energy resist: 432
+evasion: 30
+faster cast recovery: 12
+faster casting: 4
+faster ethereal casting: 20
+fire resist: 901
+healing increase: 45
+hit chance: 100
+hit point increase: 144
+hit point regeneration: 60
+intelligence bonus: 100
+lower mana: 29
+lower reagent: 60
+luck: 1171
+mana regeneration: 41
+perception: 10
+physical resist: 921
+poison resist: 620
+reflect physical: 137
+resilience: 30
+stamina increase: 100
+strength bonus: 131
+swing speed: 80
+tier XP increase: 105

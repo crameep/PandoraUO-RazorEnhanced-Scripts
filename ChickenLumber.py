@@ -11,7 +11,7 @@ MRBSerial = 0x40F8B116
 MRBLogBook = 18 
 MRBBankBook = 1  
 MRBBankSpot = 1
-MBRRuneSlots = 3
+MBRRuneSlots = 4
 UseStorageBox = True  #### Set Log Bag to Resource Storage Box
 NoBank = True ## Use Bank Stone Instead of Banking
 BankStoneSerial = 0x402AAAF6
@@ -23,7 +23,7 @@ WeightLimit = Player.MaxWeight - 80
 TreeStaticID = [3221, 3222, 3225, 3227, 3228, 3229, 3210, 3238, 3240, 3242, 3243, 3267, 3268, 3272, 3273, 3274, 3275, 3276, 3277, 3280, 3283, 3286, 3288, 3290, 3293, 3296, 3299, 3302, 3320, 3323, 3326, 3329, 3365, 3367, 3381, 3383, 3384, 3394, 3395, 3417, 3440, 3461, 3476, 3478, 3480, 3482, 3484, 3486, 3488, 3490, 3492, 3496]
 EquipaxeDelay = 2000
 TimeoutOnWaitAction = 4000
-ChopDelay = 1000
+ChopDelay = 1500
 RecallPause = 4000 
 DragDelay = 1200
 LogID = 0x1BDD
@@ -324,6 +324,8 @@ def GetRangeOffset(spotnumber):
         OZ = treeposz[spotnumber] - PZ
         
         return (OX,OY,OZ)
+    else:
+        return None
        
 ####################
     
@@ -347,7 +349,10 @@ def MoveToTree(spotnumber):
             Misc.SendMessage("Pathlocked Trying Again")
             Misc.SendMessage("{} {} {}".format(Player.Position.X + offset[0], Player.Position.Y + offset[1], Player.Position.Z + offset[2]), 222)
             #Player.PathFindTo(1187,561,-88) 
-            go(Player.Position.X + offset[0], Player.Position.Y + offset[1] + 1)
+            offset = GetRangeOffset(spotnumber)
+            newoffsety = offset[1] - 1
+            newoffsetx = offset[0] + 1
+            go(Player.Position.X + newoffsetx, Player.Position.Y + newoffsety + 1)
             pathlock = 0
         
     Misc.SendMessage('--> Reached TreeSpot: %i' % (spotnumber), 2222)
@@ -383,11 +388,12 @@ def CutTree(spotnumber):
         BankWood()
     
     lastSpot = spotnumber
+
     if Target.HasTarget():
         Misc.SendMessage("--> Extraneous Target Cancelled", 2222)
         Target.Cancel()
         Misc.Pause(500)
-    
+
     CheckEnemy()    
     Journal.Clear()
     axe = Items.FindBySerial(SerialAxe)
@@ -397,6 +403,9 @@ def CutTree(spotnumber):
     Misc.Pause(ChopDelay)
     if Journal.Search("There's not enough"):
         Misc.SendMessage("--> Go to next tree", 2222)
+    elif Journal.Search("cannot be seen"):
+            Journal.Clear()
+            dbg("Cant find tree moving to next one") 
     elif Journal.Search("That is too far away"):
         blockcount = blockcount + 1
         Journal.Clear()
