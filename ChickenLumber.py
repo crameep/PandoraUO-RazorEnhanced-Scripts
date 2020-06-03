@@ -144,10 +144,11 @@ def MasterBook(serial, book, rune, spell="R"):
 def recall(bookSerial, bookIndex):
     if MasterRuneBook:
         MasterBook(MRBSerial, MRBLogBook, bookIndex, "R")
-    Items.UseItem(bookSerial)
-    Gumps.WaitForGump(1431013363, 2000)
-    Gumps.SendAction(1431013363, bookIndex)
-    Misc.Pause(RecallPause)
+    else:
+        Items.UseItem(bookSerial)
+        Gumps.WaitForGump(1431013363, 2000)
+        Gumps.SendAction(1431013363, bookIndex)
+        Misc.Pause(RecallPause)
 
 
 def doRecall(bookSerial, bookIndex):
@@ -157,7 +158,7 @@ def doRecall(bookSerial, bookIndex):
     rv = ""
     dbg("doRecall")
     dbg("doRecall rune: " + str(bookIndex))
-    while retry < 5:
+    while retry < 2:
         dbg("doRecall, retry = " + str(retry))
         recall(bookSerial, bookIndex)
         rv = checkPositionChanged(currentX, currentY, True)
@@ -346,13 +347,18 @@ def MoveToTree(spotnumber):
         Misc.Pause(30)
         pathlock = pathlock + 1
         if pathlock > 350:
-            Misc.SendMessage("Pathlocked Trying Again")
+            Misc.SendMessage("Pathlocked Trying Again: {}".format(pathlock))
             Misc.SendMessage("{} {} {}".format(Player.Position.X + offset[0], Player.Position.Y + offset[1], Player.Position.Z + offset[2]), 222)
             #Player.PathFindTo(1187,561,-88) 
             offset = GetRangeOffset(spotnumber)
             newoffsety = offset[1] - 1
             newoffsetx = offset[0] + 1
-            go(Player.Position.X + newoffsetx, Player.Position.Y + newoffsety + 1)
+            Player.PathFindTo(Player.Position.X + newoffsetx, Player.Position.Y + newoffsety + 1, Player.Position.Z + offset[2])
+            #go(Player.Position.X + newoffsetx, Player.Position.Y + newoffsety + 1)
+            Misc.Pause(30)
+        if pathlock > 500:
+            Misc.SendMessage("Disconecting....")
+            Misc.Disconnect()
             pathlock = 0
         
     Misc.SendMessage('--> Reached TreeSpot: %i' % (spotnumber), 2222)
@@ -379,9 +385,12 @@ def overWeight():
 
 def CutTree(spotnumber):
     dbg("CutTree")
+    
     global lastSpot
     global blockcount
     global lastrune
+    global cutcount
+    cutcount = 0
     if (Player.Weight >= WeightLimit):
         Misc.SendMessage("Overweight While Cutting")
         CutLogsToBoards()
@@ -403,9 +412,11 @@ def CutTree(spotnumber):
     Misc.Pause(ChopDelay)
     if Journal.Search("There's not enough"):
         Misc.SendMessage("--> Go to next tree", 2222)
+        cutcount = 0
     elif Journal.Search("cannot be seen"):
             Journal.Clear()
-            dbg("Cant find tree moving to next one") 
+            dbg("Cant find tree moving to next one")
+            cutcount = 0
     elif Journal.Search("That is too far away"):
         blockcount = blockcount + 1
         Journal.Clear()
@@ -414,8 +425,10 @@ def CutTree(spotnumber):
             Misc.SendMessage("--> Blocked", 2222)
         else:
             CutTree(spotnumber)
+            cutcount = cutcount + 1
     else:
         CutTree(spotnumber)
+        cutcount = cutcount + 1
 
 ####################
         

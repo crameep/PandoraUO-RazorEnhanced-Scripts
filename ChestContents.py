@@ -22,7 +22,7 @@
 
 import clr, time, thread
 import re
-shitremover  = re.compile("<[^>]+[>]")
+shitremover  = re.compile("<[^>]+>")
 
 clr.AddReference('System')
 clr.AddReference('System.Drawing')
@@ -36,6 +36,70 @@ from System.Windows.Forms import (Application, Button, Form, BorderStyle,
     Label, FlatStyle, DataGridView, DataGridViewAutoSizeColumnsMode,
     DataGridViewSelectionMode, DataGridViewEditMode, CheckBox)
 from System.Data import DataTable
+
+def getFilteredProps(plist):
+    res = []
+    for p in plist[1:]:
+        prop = shitremover.sub("", p).strip(" \r\n\t")
+        if prop.find("Weight:") == 0:
+            continue
+        elif prop.find("strength requirement ") == 0:
+            continue
+        elif prop.find("durability ") == 0:
+            continue
+        elif prop.find("one-handed weapon") == 0:
+            continue
+        elif prop.find("two-handed weapon") == 0:
+            continue
+        elif prop.find("lower requirements") == 0:
+            continue
+        elif prop.find("Melee Weapon") == 0:
+            continue
+        elif prop.find("Rating") == 0:
+            continue
+        elif prop.find("night sight") == 0:
+            continue
+        elif prop.find("Armor") == 0:
+            continue
+        elif prop.find("Clothing") == 0:
+            continue
+        elif prop.find("Jewellery") == 0:
+            continue
+        elif prop.find("Shield") == 0:
+            continue
+        elif prop.find("use best weapon skill") == 0:
+            continue
+        elif prop.find("Ammo:") == 0:
+            continue
+        elif prop.find("Ranged Weapon") == 0:
+            continue
+        elif prop.find("weapon speed") == 0:
+            continue
+        elif prop.find("Blessed") == 0:
+            continue
+        elif prop.find("Rating") == 0:
+            continue
+
+        prop = prop.replace("weapon", "wep")
+        prop = prop.replace("damage", "dmg")
+        prop = prop.replace("speed", "spd")
+        prop = prop.replace("physical", "phy")
+        prop = prop.replace("resist", "rst")
+        prop = prop.replace("increase", "inc")
+        prop = prop.replace("regeneration", "regen")
+        prop = prop.replace("energy", "nrg")
+        prop = prop.replace("defense", "def")
+        prop = prop.replace("stamina", "sta")
+        prop = prop.replace("reflect", "refl")
+
+        
+
+
+
+        res.append(prop)
+
+    return "; ".join(res)
+
 
 class Content(System.IComparable, System.IConvertible):
     ID = 0
@@ -155,11 +219,11 @@ if contid > -1:
     for i in cont.Contains:
         Items.WaitForProps(i, 8000)
         plist = list(Items.GetPropStringList(i))
-        props = '; '.join(p for p in plist[1:])
-        contents.append(Content(i.Serial, plist[0], props))
-        props = shitremover.sub("", props)
+        props = getFilteredProps(plist)
         plist[0] = shitremover.sub("", plist[0])
-        filetext.append('{0} ({1})\n\n{2}\n'.format(plist[0], hex(i.Serial), props.replace('; ','\n')))
+        plist[0] = plist[0].strip()
+        contents.append(Content(i.Serial, plist[0], props))
+        filetext.append('{0} ({1})\n{2}\n'.format(plist[0], hex(i.Serial), props.replace('; ','\n')))
 
     if contents == []:
         Misc.SendMessage('It is either empty or not a container at all.', 33)
@@ -171,5 +235,3 @@ if contid > -1:
     
 else:
     Misc.SendMessage('No container was targeted.', 33)
-    
-

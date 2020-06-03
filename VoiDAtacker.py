@@ -1,5 +1,15 @@
 from System.Collections.Generic import List
 from System import Byte
+
+def SendPets(e):
+    if not(Timer.Check("PetAttack")):
+        Player.ChatSay(690, "All Kill")
+        Target.WaitForTarget(10000, False)
+        Target.TargetExecute(e)
+        Timer.Create("PetAttack", 2000 )
+def MoveToEnnemy(e):
+    Player.PathFindTo(e.Position.X, e.Position.Y, e.Position.Z)
+    Misc.Pause(1000)
 def Main():
     eNumber = 0
     fil = Mobiles.Filter()
@@ -28,17 +38,23 @@ def Main():
         if eNumber == 1:
             eNumber = 0
             if not Player.HasSpecial:
-                Player.WeaponPrimarySA()
+                Player.WeaponSecondarySA()
             Player.Attack(enemy)
+            #MoveToEnnemy(enemy)
+            #SendPets(enemy)
         if eNumber == 2:
             eNumber = 0
             if not Player.SpellIsEnabled('Momentum Strike'):
                 Spells.CastBushido('Momentum Strike')
-            Player.Attack(enemy) 
+            Player.Attack(enemy)
+            #SendPets(enemy)
+            #MoveToEnnemy(enemy)
         if eNumber > 2 :
             eNumber = 0
             if not Player.HasSpecial:
-                Player.WeaponSecondarySA()
+                Player.WeaponPrimarySA()
             Player.Attack(enemy)
+            #SendPets(enemy)
+            #MoveToEnnemy(enemy)
         Misc.Pause(250)
 Main()
