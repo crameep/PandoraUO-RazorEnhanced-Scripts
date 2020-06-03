@@ -28,14 +28,22 @@ def WeaponSetup():
 WeaponSetup()
                                
 def SendPets(e):
-    if not(Timer.Check("PetAttack")):
-        Player.ChatSay(690, "All Kill")
-        Target.WaitForTarget(10000, False)
-        Target.TargetExecute(e)
-        Timer.Create("PetAttack", 2000 )
+    if usePets:
+        if Player.Followers >= 1 and Player.Mount == None:
+            Misc.SendMessage("Sending Pet")
+            if not(Timer.Check("PetAttack")):
+                Player.ChatSay(690, "All Kill")
+                Target.WaitForTarget(300, False)
+                Target.TargetExecute(e)
+                Timer.Create("PetAttack", 2000 )
+                
+            
 def MoveToEnnemy(e):
-    Player.PathFindTo(e.Position.X, e.Position.Y, e.Position.Z)
-    Misc.Pause(1000)
+    if move:
+        Player.PathFindTo(e.Position.X, e.Position.Y, e.Position.Z)
+        Misc.Pause(1000)
+    
+    
 def Main():
     Misc.SendMessage(targetingRange)
     eNumber = 0
@@ -54,6 +62,10 @@ def Main():
         for enemy in enemies:
             eNumber += 1
         if eNumber > 0:
+            if not(Timer.Check("EOO")):
+                Spells.CastChivalry("Enemy Of One")
+                Misc.Pause(10)
+                Timer.Create("EOO", 30000 )
             if not(Timer.Check("Divine")):
                 Spells.CastChivalry("Divine Fury")
                 Misc.Pause(10)
@@ -62,31 +74,26 @@ def Main():
                 Spells.CastChivalry("Consecrate Weapon")
                 Misc.Pause(10)
                 Timer.Create("Consecrate", 10000 )
-            if not(Timer.Check("EOO")):
-                Spells.CastChivalry("Enemy Of One")
-                Misc.Pause(10)
-                Timer.Create("EOO", 30000 )
-    
         if eNumber == 1:
             eNumber = 0
             if not Player.HasSpecial:
                 Player.WeaponPrimarySA()
             Player.Attack(enemy)
-            #MoveToEnnemy(enemy)
-            #SendPets(enemy)
+            MoveToEnnemy(enemy)
+            SendPets(enemy)
         if eNumber == 2:
             eNumber = 0
             if not Player.SpellIsEnabled('Momentum Strike'):
                 Spells.CastBushido('Momentum Strike')
             Player.Attack(enemy)
-            #SendPets(enemy)
-            #MoveToEnnemy(enemy)
+            SendPets(enemy)
+            MoveToEnnemy(enemy)
         if eNumber > 2 :
             eNumber = 0
             if not Player.HasSpecial:
                 Player.WeaponPrimarySA()
             Player.Attack(enemy)
-            #SendPets(enemy)
-            #MoveToEnnemy(enemy)
+            SendPets(enemy)
+            MoveToEnnemy(enemy)
         Misc.Pause(250)
 Main()
