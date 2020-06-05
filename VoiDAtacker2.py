@@ -8,21 +8,22 @@ def WeaponSetup():
     global targetingRange
     #Misc.SendMessage("Detecting Weapon Type")
     wep = Player.GetItemOnLayer("LeftHand")
-    typeCount = len(wep.Properties)
-    index = typeCount - 2
     if wep != None:
-        if typeCount > 5 and wep.Properties[index]!= None:
-            search = str(wep.Properties[index])
-            if search.find("Ranged") != -1:
-                #Misc.SendMessage("Setting Range to 7")
-                targetingRange = 7
-            elif search.find("Melee") != -1:
-                targetingRange = 1
-                #Misc.SendMessage("Setting Range to 1")
+        typeCount = len(wep.Properties)
+        index = typeCount - 2
+        if wep != None:
+            if typeCount > 5 and wep.Properties[index]!= None:
+                search = str(wep.Properties[index])
+                if search.find("Ranged") != -1:
+                    #Misc.SendMessage("Setting Range to 7")
+                    targetingRange = 7
+                elif search.find("Melee") != -1:
+                    targetingRange = 1
+                    #Misc.SendMessage("Setting Range to 1")
 
-    else:
-        #Misc.SendMessage("Defaulting Range to 1")
-        targetingRange = 7
+        else:
+            #Misc.SendMessage("Defaulting Range to 1")
+            targetingRange = 7
 
 def Main():
     eNumber = 0
