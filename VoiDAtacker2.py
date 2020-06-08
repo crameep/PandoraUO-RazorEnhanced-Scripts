@@ -64,7 +64,11 @@ def Main():
         if eNumber == 1:
             eNumber = 0
             if not Player.HasSpecial:
-                Player.WeaponPrimarySA()
+                if not(Timer.Check("Secondary")):
+                    Player.WeaponSecondarySA()
+                    Timer.Create("Secondary", 3000 )
+                else:
+                    Player.WeaponPrimarySA()
             Player.Attack(enemy)
         if eNumber == 2:
             eNumber = 0

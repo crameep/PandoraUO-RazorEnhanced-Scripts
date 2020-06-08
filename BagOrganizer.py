@@ -1,5 +1,6 @@
-containerSerial = 0x400732B1
-grabBagSerial = 0x40F8CB7C
+containerSerial = 0x40C97091
+grabBagSerial = 0x40C97091
+OrgGrabBag = 0x40C97091
 runeID = 0x1F14
 
 def find(containerSerial, typeArray):
@@ -12,9 +13,15 @@ def find(containerSerial, typeArray):
     return ret_list 
     
 runes = find(Player.Backpack.Serial, [runeID])
+unravels = find(Player.Backpack.Serial, [0x573C])
 
 for rune in runes:
     Items.Move(rune, containerSerial, 0, 21, 13)
     Misc.Pause(700)
+    
+for unravel in unravels:
+    Items.Move(unravel, OrgGrabBag, 0, 130, 13)
+    Misc.Pause(700)
+    
 
 

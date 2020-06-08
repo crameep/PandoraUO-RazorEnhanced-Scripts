@@ -1,9 +1,21 @@
 UnravelID = 0x573C
 GrabBag = Items.FindBySerial(0x40F8CB7C)
+UnravelBag = 0x40C97091
 GrabBagCount = 0
 types = ["Jewellery", "Armor", "Shield", "Weapon", "Clothing"]
 
-for unravel in Player.Backpack.Contains:
+def find(containerSerial, typeArray):
+    ret_list = []
+    container = Items.FindBySerial(containerSerial)
+    if container != None:
+        for item in container.Contains:
+            if item.ItemID in typeArray:
+                ret_list.append(item)
+    return ret_list
+    
+unravels = find(UnravelBag, [0x573c])
+
+for unravel in unravels:
     if unravel.ItemID == UnravelID:
         
         Misc.SendMessage("Unraveling....", 222)
