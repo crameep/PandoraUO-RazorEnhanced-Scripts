@@ -18,7 +18,7 @@ miningCoords = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1],[-2,-2],[-
 
 oreIDs = [0x19B7,0x19B8,0x19B9,0x19BA]
 bankIDs = [0x1779,0x1BF2,0x1726,0x3192,0x3193,0x3195,0x3197,0x3198,]
-forgeID = 0x4050B63E
+forgeID = 0x40005971
 MasterRuneBook = 0x40F8B116
 BankStone = 0x402AAAF6
 resourceBox = 0x413985E1
@@ -90,18 +90,18 @@ def smelt():
                     Items.UseItem(item)
                     Target.WaitForTarget(1000,False)
                     Target.TargetExecute(forgeID)
-                    Misc.Pause(1000)
+                    Misc.Pause(1200)
             Misc.Pause(2000)
         else:
             Misc.SendMessage("Recalling to forge", 444)
             common.MasterBook(MasterRuneBook, mrbBankBook, 2, "R")
-            Misc.Pause(1000)
+            Misc.Pause(1200)
             for item in Player.Backpack.Contains:
                 if item.ItemID in oreIDs:
                     Items.UseItem(item)
                     Target.WaitForTarget(1000,False)
                     Target.TargetExecute(forgeID)
-                    Misc.Pause(1000)
+                    Misc.Pause(1200)
             Misc.Pause(2000)
         bank()
          
@@ -127,7 +127,7 @@ def bank():
     else:
         Misc.SendMessage("RECALL BANKING", 444)
         common.MasterBook(MasterRuneBook, mrbBankBook, 1, "R")
-        Misc.Pause(500)
+        Misc.Pause(1200)
         Player.ChatSay(690, "bank")
         Misc.Pause(1000)
         for item in bankItems:
