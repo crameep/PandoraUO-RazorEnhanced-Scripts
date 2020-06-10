@@ -85,7 +85,9 @@ def Main():
         if eNumber == 1:
             eNumber = 0
             if not Player.HasSpecial:
-                Player.WeaponPrimarySA()
+                if not(Timer.Check("Primary")):
+                    Player.WeaponPrimarySA()
+                    Timer.Create("Primary", 800 )
             Player.Attack(enemy)
             MoveToEnnemy(enemy)
             SendPets(enemy)
@@ -99,7 +101,9 @@ def Main():
         if eNumber > 2 :
             eNumber = 0
             if not Player.HasSpecial:
-                Player.WeaponPrimarySA()
+                if not(Timer.Check("Secondary")):
+                    Player.WeaponSecondarySA()
+                    Timer.Create("Secondary", 800 )
             Player.Attack(enemy)
             SendPets(enemy)
             MoveToEnnemy(enemy)
