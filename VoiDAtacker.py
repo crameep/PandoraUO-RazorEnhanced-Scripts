@@ -2,17 +2,21 @@ from System.Collections.Generic import List
 from System import Byte
 
 usePets = True
-move = False
+move = True
 targetingRange = 1
 StartWep = Player.GetItemOnLayer("LeftHand")
+startX = Player.Position.X
+startY = Player.Position.Y
+startZ = Player.Position.Z
 
 def WeaponSetup():
     global targetingRange
     #Misc.SendMessage("Detecting Weapon Type")
     wep = Player.GetItemOnLayer("LeftHand")
-    typeCount = len(wep.Properties)
-    index = typeCount - 2
+
     if wep != None:
+        typeCount = len(wep.Properties)
+        index = typeCount - 2
         if typeCount > 5 and wep.Properties[index]!= None:
             search = str(wep.Properties[index])
             if search.find("Ranged") != -1:
@@ -25,7 +29,6 @@ def WeaponSetup():
     else:
         #Misc.SendMessage("Defaulting Range to 1")
         targetingRange = 7
-WeaponSetup()
                                
 def SendPets(e):
     if usePets:
@@ -49,9 +52,14 @@ def Main():
     eNumber = 0
     fil = Mobiles.Filter()
     fil.Enabled = True
-    fil.RangeMax = targetingRange
     fil.Notorieties = List[Byte](bytes([3,4,5,6]))
     while not Player.IsGhost:
+        if not(Timer.Check("Return")):
+            Player.PathFindTo(startX, startY, startZ)
+            Player.ChatSay(690, "[grab")
+            Timer.Create("Return", 30000 )
+        WeaponSetup()
+        fil.RangeMax = targetingRange
         CurWep = Player.GetItemOnLayer("LeftHand")
         if CurWep != None:
             if StartWep.Name != CurWep.Name:

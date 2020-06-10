@@ -37,6 +37,8 @@ keepIDs = [
 0x3196, # White Pearl
 0x14EF, # Scroll of Transcendence
 0x0DCA, # Special Net
+0x0F78, # Bat Wing
+0x0F8F, # Grave Dust
 ]
 
 
