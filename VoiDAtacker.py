@@ -2,7 +2,7 @@ from System.Collections.Generic import List
 from System import Byte
 
 usePets = True
-move = True
+move = False
 targetingRange = 1
 StartWep = Player.GetItemOnLayer("LeftHand")
 startX = Player.Position.X

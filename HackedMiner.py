@@ -18,12 +18,15 @@ miningCoords = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1],[-2,-2],[-
 
 oreIDs = [0x19B7,0x19B8,0x19B9,0x19BA]
 bankIDs = [0x1779,0x1BF2,0x1726,0x3192,0x3193,0x3195,0x3197,0x3198,]
-PortableForge = 0x4050B63E
+forgeID = 0x4050B63E
 MasterRuneBook = 0x40F8B116
 BankStone = 0x402AAAF6
 resourceBox = 0x413985E1
 mrbBook = 19
 mrbSpots = 16
+bankStone = False
+portableForge = False
+mrbBankBook = 20
 
         
 def go(x1, y1):
@@ -80,14 +83,28 @@ def mineStatic(x,y,z, gfx):
         if Player.Weight > Player.MaxWeight -45:
             smelt()
             
-def smelt():    
-        for item in Player.Backpack.Contains:
-            if item.ItemID in oreIDs:
-                Items.UseItem(item)
-                Target.WaitForTarget(1000,False)
-                Target.TargetExecute(PortableForge)
-                Misc.Pause(1000)
-        bank() 
+def smelt():
+        if portableForge:
+            for item in Player.Backpack.Contains:
+                if item.ItemID in oreIDs:
+                    Items.UseItem(item)
+                    Target.WaitForTarget(1000,False)
+                    Target.TargetExecute(forgeID)
+                    Misc.Pause(1000)
+            Misc.Pause(2000)
+        else:
+            Misc.SendMessage("Recalling to forge", 444)
+            common.MasterBook(MasterRuneBook, mrbBankBook, 2, "R")
+            Misc.Pause(1000)
+            for item in Player.Backpack.Contains:
+                if item.ItemID in oreIDs:
+                    Items.UseItem(item)
+                    Target.WaitForTarget(1000,False)
+                    Target.TargetExecute(forgeID)
+                    Misc.Pause(1000)
+            Misc.Pause(2000)
+        bank()
+         
 
 def find(containerSerial, typeArray):
     ret_list = []
@@ -99,13 +116,23 @@ def find(containerSerial, typeArray):
     return ret_list
     
 def bank():
-    ores = find(Player.Backpack.Serial, bankIDs)
-    Items.UseItem(0x402AAAF6)
-    Misc.Pause(500)
-    for ore in ores:
-        Items.Move(ore, resourceBox, 0)
-        Misc.Pause(1200)
-        
+    bankItems = find(Player.Backpack.Serial, bankIDs)
+    if bankStone:
+        Misc.SendMessage("BANKING", 444)
+        Items.UseItem(0x402AAAF6)
+        Misc.Pause(500)
+        for item in bankItems:
+            Items.Move(item, resourceBox, 0)
+            Misc.Pause(1200)
+    else:
+        Misc.SendMessage("RECALL BANKING", 444)
+        common.MasterBook(MasterRuneBook, mrbBankBook, 1, "R")
+        Misc.Pause(500)
+        Player.ChatSay(690, "bank")
+        Misc.Pause(1000)
+        for item in bankItems:
+            Items.Move(item, resourceBox, 0)
+            Misc.Pause(1200)
        
 def Main():
     while not Player.IsGhost:
@@ -114,7 +141,7 @@ def Main():
             
         for x in range(1,mrbSpots):
             Misc.SendMessage("Recalling to {}".format(x))
-            common.MasterBook(0x40F8B116, mrbBook, x, "R")
+            common.MasterBook(MasterRuneBook, mrbBook, x, "R")
             Misc.Pause(2000)
             for mcoords in miningCoords:
                 checkTile(mcoords[0],mcoords[1])
