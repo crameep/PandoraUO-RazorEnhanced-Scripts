@@ -38,7 +38,16 @@ def go(x1, y1):
     PathFinding.Go(Coords)
     
     
-    
+ ## Find an array of items ##   
+def find(containerSerial, typeArray):
+    ret_list = []
+    container = Items.FindBySerial(containerSerial)
+    if container != None:
+        for item in container.Contains:
+
+            if item.ItemID in typeArray:
+                ret_list.append(item)
+    return ret_list     
     
 ##### Master Rune Book Code  
 def MasterBook(serial, book, rune, spell="R"):

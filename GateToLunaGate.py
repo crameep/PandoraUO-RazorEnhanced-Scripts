@@ -7,4 +7,4 @@ for x in common.razorModules:
 
     
 #Recal To Luna Moongate    
-common.MasterBook(hobo.MasterRuneBook, 1, 8, "R")
+common.MasterBook(hobo.MasterRuneBook, 1, 8, "G")
