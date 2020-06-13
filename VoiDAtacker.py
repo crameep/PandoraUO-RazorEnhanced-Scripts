@@ -54,7 +54,7 @@ def Main():
     fil.Enabled = True
     fil.Notorieties = List[Byte](bytes([3,4,5,6]))
     while not Player.IsGhost:
-        if not(Timer.Check("Return")):
+        if not(Timer.Check("Return")) and move != False:
             Player.PathFindTo(startX, startY, startZ)
             Player.ChatSay(690, "[grab")
             Timer.Create("Return", 30000 )
