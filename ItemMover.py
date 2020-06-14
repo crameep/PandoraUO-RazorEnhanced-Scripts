@@ -3,6 +3,10 @@
 #Chose Source Container
 #Chose Destination Container
 
+
+from System.Collections.Generic import List
+
+
 startX = 0
 startY = 0
 verticalIncrement = 0
@@ -26,7 +30,11 @@ def Pick(text, multiple=True):
                itemList.append(chosen.ItemID)
            else:
                multiple = False
-               return itemList
+               if len(itemList) == 1:
+                   Misc.SendMessage("Returning {}".format(chosen.Name))
+                   return chosen
+               else:
+                   return itemList
    else:
        Misc.SendMessage(text, 76)
        chosenid = Target.PromptTarget()
@@ -38,11 +46,14 @@ def Pick(text, multiple=True):
        
         
 def find(containerSerial, typeArray):
+    if type(typeArray) is not list:
+       item = typeArray
+       typeArray = [item.ItemID]
+       
     ret_list = []
     container = Items.FindBySerial(containerSerial)
     if container != None:
         for item in container.Contains:
-
             if item.ItemID in typeArray:
                 ret_list.append(item)
     return ret_list 
@@ -105,7 +116,7 @@ destCont = Pick("Select the destination container", False)
 
 
 if sourceCont == None:
-    sourceCont = Items.FindBySerial(itemsToMove.Container)
+    sourceCont = Items.FindBySerial(itemsToMove.Container) 
         
 if not itemsToMove:
     Misc.SendMessage("You didn't Pick an Item to move so I will move all items in the source.", 222)
@@ -113,15 +124,16 @@ if not itemsToMove:
     items = list(dict.fromkeys(items))
     horizontalIncrement = 20
 else:
-    items = find(sourceCont.Serial, sorted(itemsToMove))
+    items = find(sourceCont.Serial, itemsToMove)
 
     
 getSize(destCont)
 
 x = startX
 y = startY
-Misc.SendMessage(items)
+Misc.SendMessage(len(items))
 for item in items:
+    Misc.SendMessage(item)
     if item.ItemID not in ignoreItems:
         Misc.SendMessage("{},{}".format(x,y))
         if x > endX:
