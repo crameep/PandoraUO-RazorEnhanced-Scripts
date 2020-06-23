@@ -1,3 +1,12 @@
+import time
+import sys
+import math
+#
+if not Misc.CurrentScriptDirectory() in sys.path:
+    sys.path.append(Misc.CurrentScriptDirectory())
+#
+
+import System
 import common as common
 import hoboconstants as hobo
 

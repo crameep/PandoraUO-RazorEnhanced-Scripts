@@ -1,0 +1,6 @@
+last = Mobiles.FindBySerial(Target.GetLastAttack())
+Player.HeadMessage(222,"Poison@: {}".format(last.Name))
+Misc.SendMessage(last.Name)
+Spells.CastMagery("Poison")
+Target.WaitForTarget(1000, False)
+Target.TargetExecute(last)

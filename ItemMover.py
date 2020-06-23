@@ -94,6 +94,13 @@ def getSize(container):
         endX = 155
         endY = 120
         verticalIncrement = 20
+    elif "wooden box" in container.Name:
+        Misc.SendMessage("Setting size to Box")
+        startX = 15
+        startY = 50
+        endX = 155
+        endY = 120
+        verticalIncrement = 20
     elif "metal chest" in container.Name:
         Misc.SendMessage("Setting size to Metal Chest")
         startX = 20
@@ -122,7 +129,7 @@ if not itemsToMove:
     Misc.SendMessage("You didn't Pick an Item to move so I will move all items in the source.", 222)
     items = itemsToMove = sourceCont.Contains
     items = list(dict.fromkeys(items))
-    horizontalIncrement = 20
+    horizontalIncrement = 15
 else:
     items = find(sourceCont.Serial, itemsToMove)
 
@@ -133,9 +140,8 @@ x = startX
 y = startY
 Misc.SendMessage(len(items))
 for item in items:
-    Misc.SendMessage(item)
     if item.ItemID not in ignoreItems:
-        Misc.SendMessage("{},{}".format(x,y))
+        #Misc.SendMessage("{},{}".format(x,y))
         if x > endX:
             x = startX
             y = y + verticalIncrement

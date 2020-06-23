@@ -1,0 +1,6 @@
+last = Mobiles.FindBySerial(Target.GetLastAttack())
+Player.HeadMessage(222,"Fireball@: {}".format(last.Name))
+Misc.SendMessage(last.Name)
+Spells.CastNecro("Evil Omen")
+Target.WaitForTarget(1000, False)
+Target.TargetExecute(last)
