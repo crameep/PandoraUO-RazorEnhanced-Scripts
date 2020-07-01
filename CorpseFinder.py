@@ -18,6 +18,6 @@ while True:
         Misc.IgnoreObject(closest.Serial)
         Misc.SendMessage(closest.Serial)
         Player.PathFindTo(closest.Position.X, closest.Position.Y, closest.Position.Z )
-        Misc.Pause(3000)
+        Misc.Pause(5000)
         Items.Hide(closest)
         Misc.Pause(1000)

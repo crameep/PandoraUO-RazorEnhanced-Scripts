@@ -1,6 +1,6 @@
-
-while True:
-    Misc.WaitForContext(0x000D43BD, 10000)
-    Misc.ContextReply(0x000D43BD, 0)
+target = Target.PromptTarget()
+while not Player.IsGhost:
+    Misc.WaitForContext(target, 10000)
+    Misc.ContextReply(target, 0)
     Misc.Pause(1000)
 

@@ -1,7 +1,7 @@
 from System.Collections.Generic import List
 from System import Byte
 
-targetingRange = 1
+targetingRange = 15
 usePets = False
 move = False
 honor = True
@@ -35,9 +35,9 @@ def WeaponSetup():
                 search = str(wep.Properties[index])
                 if search.find("Ranged") != -1:
                 #Misc.SendMessage("Setting Range to 7")
-                    targetingRange = 7
+                    targetingRange = 12
                 elif search.find("Melee") != -1:
-                    targetingRange = 7
+                    targetingRange = 12
                     #Misc.SendMessage("Setting Range to 1")
 
         else:

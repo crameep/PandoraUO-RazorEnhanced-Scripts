@@ -1,11 +1,19 @@
-from System.Collections.Generic import List
+import time
+import sys
+import math
+#
+if not Misc.CurrentScriptDirectory() in sys.path:
+    sys.path.append(Misc.CurrentScriptDirectory())
+#
 
+import System
 import common as common
+import hoboconstants as hobo
 
 for x in common.razorModules:
     x = str(x)
     exec(compile("common." + x + " = " + x, "<retards>", "exec"))
-    
+
     
 #mining script by Mourn 8182 discord contact
 #have a fire beetle and walk by mineable cliffs or caves , if necessary add ids on lines 4-5

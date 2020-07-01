@@ -39,6 +39,9 @@ keepIDs = [
 0x0DCA, # Special Net
 0x0F78, # Bat Wing
 0x0F8F, # Grave Dust
+0x571C, # Essence of Persistance
+0x5720, #Spider Carapace
+0x3195, # Ecu Citrine 
 ]
 
 
@@ -72,5 +75,5 @@ for item in items:
     Misc.Pause(1200)
 for i in cont.Contains:
     Misc.SendMessage("Trashing: {}".format(i),333)
-    Items.Move(i, 0x41A5DA10, 0, 0, 0)
+    Items.Move(i, 0x4032FF5A, 0, 0, 0)
     Misc.Pause(1200)

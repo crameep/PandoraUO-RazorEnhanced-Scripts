@@ -43,6 +43,6 @@ while not Player.IsGhost:
                     Items.UseItem(0x401BE8B4)
                     Target.WaitForTarget(10000, False)
                     Target.TargetExecute(pet)
-                    Misc.Pause(10000)
+                    Misc.Pause(11000)
     
     
